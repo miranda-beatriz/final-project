@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Finder</title>
+    <title>Book Recipe</title>
     <link rel="stylesheet" href="recipe-finder/styles/styles.css">
+    <link rel="stylesheet" href="recipe-finder/styles/book-recipe.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
@@ -24,21 +25,29 @@
     </header>
 
     <main>
-        <section class="hero">
-            <div class="hero-text">
-                <p class="tagline">Discover New Recipes</p>
-                <h2 class="hero-heading">Find the Perfect Recipe for Any Occasion</h2>
-                <p class="hero-description">
-                    Search for recipes by ingredient, explore random recipes, and save your favorites in your personal recipe book.
-                </p>
-                <button class="cta-button">See Recipes</button>
-            </div>
-            <div class="hero-image">
-                <img src="recipe-finder/images/hero.webp" alt="Delicious Food">
+        <h1><em>Book Recipe</em></h1>
+
+        <section class="recipe-section">
+            <h2>To make</h2>
+            <div class="recipe-container">
+                <!-- Recipe Cards - To be filled dynamically -->
             </div>
         </section>
 
-        <section id="results" class="results-section"></section>
+        <section class="recipe-section">
+            <h2>Completed</h2>
+            <div class="filter-buttons">
+                <button class="filter active">ALL</button>
+                <button class="filter">5 STARS</button>
+                <button class="filter">4 STARS</button>
+                <button class="filter">3 STARS</button>
+                <button class="filter">2 STARS</button>
+                <button class="filter">1 STAR</button>
+            </div>
+            <div class="recipe-container">
+                <!-- Completed Recipe Cards - To be filled dynamically -->
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -64,6 +73,5 @@
         </div>
     </footer>
 
-    <script src="recipe-finder/script/home-page.js"></script>
 </body>
 </html>
