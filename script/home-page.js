@@ -20,3 +20,36 @@ function displayRecipes(recipes) {
         results.appendChild(div);
     });
 }
+document.getElementById('search-button').addEventListener('click', async () => {
+    const query = document.getElementById('search-input').value;
+    if (query) {
+        const response = await fetch(`/search?query=${query}`);
+        const data = await response.json();
+        displayRecipes(data);
+    }
+});
+
+document.getElementById('random-button').addEventListener('click', async () => {
+    const response = await fetch('/random');
+    const data = await response.json();
+    displayRecipes({ hits: [data] });
+});
+
+function displayRecipes(data) {
+    const results = document.getElementById('recipe-results');
+    results.innerHTML = '';
+    if (data.hits.length > 0) {
+        data.hits.forEach(hit => {
+            const recipe = hit.recipe;
+            const recipeDiv = document.createElement('div');
+            recipeDiv.innerHTML = `
+                <h3>${recipe.label}</h3>
+                <img src="${recipe.image}" alt="${recipe.label}" width="200">
+                <p><a href="${recipe.url}" target="_blank">View Recipe</a></p>
+            `;
+            results.appendChild(recipeDiv);
+        });
+    } else {
+        results.innerHTML = '<p>No recipes found.</p>';
+    }
+}

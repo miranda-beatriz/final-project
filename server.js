@@ -4,11 +4,16 @@ const cors = require('cors');
 require('dotenv').config();
 const path = require('path');
 
+
 const app = express();
 const PORT = 3000;
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'home-page', 'index.html'));
+});
 
 const API_ID = process.env.EDAMAM_APP_ID;
 const API_KEY = process.env.EDAMAM_APP_KEY;
@@ -36,5 +41,5 @@ app.get('/random', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:3000`);
 });
