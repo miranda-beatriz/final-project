@@ -14,9 +14,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 const favoritesFile = path.join(__dirname, 'favorites.json');
 
-const API_ID = process.env.EDAMAM_APP_ID;
-const API_KEY = process.env.EDAMAM_APP_KEY;
-const BASE_URL = 'https://api.edamam.com/search';
+const API_ID = "bf48d5f1";
+const API_KEY = "3b94d1da02571db11df528b9083d5fc3";
+const BASE_URL = 'https://api.edamam.com/api/recipes/v2';
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'home-page', 'index.html'));
@@ -26,23 +26,45 @@ app.get('/', (req, res) => {
 app.get('/search', async (req, res) => {
     try {
         const { query } = req.query;
-        const response = await axios.get(`${BASE_URL}?q=${query}&app_id=${API_ID}&app_key=${API_KEY}`);
+        const response = await axios.get(`${BASE_URL}`, {
+            params: {
+                type: "public",
+                q: query,
+                app_id: API_ID,
+                app_key: API_KEY
+            }
+        });
         res.json(response.data);
     } catch (error) {
+        console.error("Error fetching recipes:", error);
         res.status(500).json({ error: 'Error fetching recipes' });
     }
 });
 
 app.get('/random', async (req, res) => {
     try {
-        const response = await axios.get(`${BASE_URL}?q=random&app_id=${API_ID}&app_key=${API_KEY}`);
+        const response = await axios.get(`${BASE_URL}`, {
+            params: {
+                type: "public",
+                q: "chicken",
+                app_id: API_ID,
+                app_key: API_KEY
+            }
+        });
+
         const recipes = response.data.hits;
+        if (recipes.length === 0) {
+            return res.json({ message: "No recipes found" });
+        }
+
         const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
         res.json(randomRecipe);
     } catch (error) {
+        console.error("Error fetching random recipe:", error);
         res.status(500).json({ error: 'Error fetching random recipe' });
     }
 });
+
 
 // Function to read favorites
 const readFavorites = () => {

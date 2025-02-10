@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Finder</title>
     <link rel="stylesheet" href="recipe-finder/styles/styles.css">
+    <script src="recipe-finder/script/home-page.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
@@ -12,13 +13,13 @@
 <body>
     <header class="top-nav">
         <nav>
-            <a href="#">Book Recipe</a>
+            <a href="recipe-finder/book-recipe.html">Book Recipe</a>
             <a href="#">Random Recipe</a>
             <img class="logo"  src="recipe-finder/images/logo.jpg" alt="logo">
-            <section class="search-section">
-                <input type="text" id="searchInput" placeholder="Search for a recipe...">
-                <button onclick="searchRecipe()">Search</button>
-            </section>
+            <input type="text" id="searchInput" placeholder="Search for a recipe">
+            <button id="search-button">Search</button>
+            <div id="recipe-results"></div>
+
 
         </nav>
     </header>
