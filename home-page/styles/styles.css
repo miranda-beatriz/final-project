@@ -8,11 +8,10 @@
 body {
     font-family: 'Playfair Display', serif;
     text-align: center;
-    background-color: #945b5b;
-    color: #a82c2c;
+    background-color: #f0f0f0;
+    color: #5e2a00;
 }
 
-/* ✅ Navbar */
 header {
     display: flex;
     justify-content: center;
@@ -91,7 +90,6 @@ nav a {
     background-color: #444;
 }
 
-/* ✅ Placeholder de imagem */
 .image-placeholder {
     background-color: #ddd;
     width: 90%;
@@ -103,7 +101,15 @@ nav a {
     justify-content: center;
 }
 
-/* ✅ Footer */
+.hero-image img {
+    width: 100%;
+    max-width: 600px; 
+    height: auto; 
+    display: block;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
 footer {
     background-color: #f9f9f9;
     padding: 20px;
@@ -130,10 +136,16 @@ footer {
 .footer-links a {
     margin: 0 10px;
 }
+.logo{
+    width: 70px;
+    height: 40px; 
+    
+}
+.social-icons img{
+    width: 30px;
+}
 
-/* 🔥 Responsividade */
 
-/* 📱 Mobile */
 @media (max-width: 768px) {
     nav {
         flex-direction: column;

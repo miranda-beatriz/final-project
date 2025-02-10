@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Finder</title>
+    <link rel="stylesheet" href="home-page/styles/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="top-nav">
+        <nav>
+            <a href="#">Book Recipe</a>
+            <a href="#">Random Recipe</a>
+            <img class="logo"  src="home-page/images/logo.jpg" alt="logo">
+            <section class="search-section">
+                <input type="text" id="searchInput" placeholder="Search for a recipe...">
+                <button onclick="searchRecipe()">Search</button>
+            </section>
+
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-text">
+                <p class="tagline">Discover New Recipes</p>
+                <h2 class="hero-heading">Find the Perfect Recipe for Any Occasion</h2>
+                <p class="hero-description">
+                    Search for recipes by ingredient, explore random recipes, and save your favorites in your personal recipe book.
+                </p>
+                <button class="cta-button">See Recipes</button>
+            </div>
+            <div class="hero-image">
+                <img src="home-page/images/hero.webp" alt="Delicious Food">
+            </div>
+        </section>
+
+        <section id="results" class="results-section"></section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <nav>
+                <a href="#">Home</a>
+                <a href="#">Random Recipe</a>
+                <a href="#">Book Recipe</a>
+            </nav>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/"><img src="home-page/images/instagram.jpg" alt="instagram"></a>
+                <a href="https://x.com/?lang=pt"><img src="home-page/images/x.webp" alt="x"></a>
+                <a href="https://www.facebook.com/?locale=pt_BR"><img src="home-page/images/facebook.png" alt="facebook"></a>
+            </div>
+            <img class="logo"  src="home-page/images/logo.jpg" alt="logo">
+    
+            
+        </div>
+        <p class="footer-text">© 2024 Your Website. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+    </footer>
+
+    <script src="home-page/script/home-page.js"></script>
+</body>
+</html>
