@@ -1,8 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const searchButton = document.getElementById("search-button");
     const searchInput = document.getElementById("searchInput");
+    const randomButton = document.getElementById("random-button");
 
-    if (!searchButton || !searchInput) {
+    // Verifica se os elementos existem antes de adicionar eventos
+    if (!searchButton || !searchInput || !randomButton) {
         console.error("Elementos do DOM não foram encontrados!");
         return;
     }
@@ -25,6 +27,16 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Erro ao buscar receitas:", error);
         }
     });
+
+    randomButton.addEventListener("click", async function () {
+        try {
+            const response = await fetch("http://localhost:5173/random");
+            const data = await response.json();
+            displayRecipes([data]);
+        } catch (error) {
+            console.error("Erro ao buscar receita aleatória:", error);
+        }
+    });
 });
 
 function displayRecipes(hits) {
@@ -39,36 +51,12 @@ function displayRecipes(hits) {
             recipeDiv.innerHTML = `
                 <h3>${recipe.label}</h3>
                 <img src="${recipe.image}" alt="${recipe.label}" width="200">
-                <p><a href="${recipe.url}" target="_blank">View Recipe</a></p>
+                <p><a href="${recipe.url}" target="_blank">Ver Receita</a></p>
             `;
 
             results.appendChild(recipeDiv);
         });
     } else {
-        results.innerHTML = "<p>No recipes found.</p>";
+        results.innerHTML = "<p>Nenhuma receita encontrada.</p>";
     }
 }
-
-
-async function getRandomRecipe() {
-    const response = await fetch('http://localhost:5173/random');
-    const data = await response.json();
-    displayRecipes([data]);
-}
-
-
-document.getElementById('search-button').addEventListener('click', async () => {
-    const query = document.getElementById('search-input').value;
-    if (query) {
-        const response = await fetch(`/search?query=${query}`);
-        const data = await response.json();
-        displayRecipes(data);
-    }
-});
-
-document.getElementById('random-button').addEventListener('click', async () => {
-    const response = await fetch('/random');
-    const data = await response.json();
-    displayRecipes({ hits: [data] });
-});
-

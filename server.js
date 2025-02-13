@@ -4,19 +4,14 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-
-
-
+const getRecipes = require('./fetchRecipes');
 const app = express();
-const PORT = 3000;
+const PORT = 5173;
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 const favoritesFile = path.join(__dirname, 'favorites.json');
 
-const API_ID = "bf48d5f1";
-const API_KEY = "3b94d1da02571db11df528b9083d5fc3";
-const BASE_URL = 'https://api.edamam.com/api/recipes/v2';
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'home-page', 'index.html'));
@@ -32,12 +27,15 @@ app.get('/search', async (req, res) => {
                 q: query,
                 app_id: API_ID,
                 app_key: API_KEY
+            },
+            headers: {
+                'Edamam-Account-User': 'biamiranda'
             }
         });
         res.json(response.data);
     } catch (error) {
         console.error("Error fetching recipes:", error);
-        res.status(500).json({ error: 'Error fetching recipes' });
+        res.status(500).json({ error: error.message });
     }
 });
 
