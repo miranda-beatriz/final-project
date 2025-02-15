@@ -1,9 +1,9 @@
 const axios = require('axios');
+require('dotenv').config(); // Ensure .env is loaded
 
 const BASE_URL = "https://api.edamam.com/api/recipes/v2";
-const API_ID = "bf48d5f1";
-const API_KEY = "3b94d1da02571db11df528b9083d5fc3";
-const USER_ID = "biamiranda"; // Seu usuário da Edamam
+const API_ID = process.env.API_ID;
+const API_KEY = process.env.API_KEY;
 
 async function getRecipes(query) {
     try {
@@ -13,19 +13,16 @@ async function getRecipes(query) {
                 q: query,
                 app_id: API_ID,
                 app_key: API_KEY
-            },
-            headers: {
-                "Edamam-Account-User": USER_ID // Adicionando User ID aqui
             }
         });
 
-        console.log("Receitas:", response.data);
+        console.log("Recipes:", response.data);
         return response.data;
     } catch (error) {
-        console.error("Erro na requisição:", error.response?.data || error.message);
-        throw new Error("Erro ao buscar receitas");
+        console.error("Error in request:", error.response?.data || error.message);
+        throw new Error("Failed to fetch recipes");
     }
 }
 
-// Teste da função
+// Test Function
 getRecipes("chicken").then(data => console.log(data));

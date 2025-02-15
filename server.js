@@ -4,13 +4,52 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
-const getRecipes = require('./fetchRecipes');
+const getRecipes = require('./fetchRecipes.js');
 const app = express();
 const PORT = 5173;
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 const favoritesFile = path.join(__dirname, 'favorites.json');
+const BASE_URL = "https://api.edamam.com/api/meal-planner/v1";
+require('dotenv').config();
+
+const API_ID = process.env.API_ID;
+const API_KEY = process.env.API_KEY;
+console.log("User ID:", process.env.EDAMAM_ACCOUNT_USER);
+
+const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+        'EDAMAM_ACCOUNT_USER': process.env.EDAMAM_ACCOUNT_USER
+    }
+});
+
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+}));
+
+app.post('/search', async (req, res) => {
+    try {
+        const { query } = req.body; 
+
+        const response = await axios.post(`${BASE_URL}/${API_ID}/select?type=public`, {}, {
+            headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Edamam-Account-User': process.env.EDAMAM_ACCOUNT_USER
+            }
+        });
+
+        res.json(response.data);
+    } catch (error) {
+        console.error("Error fetching recipes:", error.response?.data || error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 
 app.get('/', (req, res) => {

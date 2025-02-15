@@ -1,6 +1,6 @@
 const APP_ID = "bf48d5f1";
 const APP_KEY = "3b94d1da02571db11df528b9083d5fc3";
-const API_URL = `https://api.edamam.com/api/recipes/v2?type=public&q=chicken&app_id=${APP_ID}&app_key=${APP_KEY}&from=0&to=10`;
+const API_URL = `https://api.edamam.com/api/recipes/v2?type=public&q=chicken&app_id=bf48d5f1&app_key=3b94d1da02571db11df528b9083d5fc3&from=0&to=10`;
 
 
 document.addEventListener("DOMContentLoaded", () => {

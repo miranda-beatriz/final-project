@@ -3,28 +3,33 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("searchInput");
     const randomButton = document.getElementById("random-button");
 
-    // Verifica se os elementos existem antes de adicionar eventos
     if (!searchButton || !searchInput || !randomButton) {
-        console.error("Elementos do DOM não foram encontrados!");
+        console.error("DOM elements not found!");
         return;
     }
 
     searchButton.addEventListener("click", async function () {
         const query = searchInput.value.trim();
-
         if (query === "") {
-            console.error("Por favor, digite um termo de pesquisa.");
+            console.error("Please enter a search term.");
             return;
         }
 
         try {
-            const response = await fetch(`http://localhost:5173/search?query=${query}`);
-            if (!response.ok) throw new Error("Erro ao buscar receitas");
+            const response = await fetch("http://localhost:5173/search", {
+                method: "POST", // Agora usando POST
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ query: query }) // Enviando o termo de busca
+            });
+
+            if (!response.ok) throw new Error("Error fetching recipes");
 
             const data = await response.json();
             displayRecipes(data.hits);
         } catch (error) {
-            console.error("Erro ao buscar receitas:", error);
+            console.error("Error fetching recipes:", error);
         }
     });
 
@@ -34,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
             displayRecipes([data]);
         } catch (error) {
-            console.error("Erro ao buscar receita aleatória:", error);
+            console.error("Error fetching random recipe:", error);
         }
     });
 });
@@ -51,12 +56,12 @@ function displayRecipes(hits) {
             recipeDiv.innerHTML = `
                 <h3>${recipe.label}</h3>
                 <img src="${recipe.image}" alt="${recipe.label}" width="200">
-                <p><a href="${recipe.url}" target="_blank">Ver Receita</a></p>
+                <p><a href="${recipe.url}" target="_blank">View Recipe</a></p>
             `;
 
             results.appendChild(recipeDiv);
         });
     } else {
-        results.innerHTML = "<p>Nenhuma receita encontrada.</p>";
+        results.innerHTML = "<p>No recipes found.</p>";
     }
 }
