@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "concurrently \"node server.js\" \"vite\"",
+    "dev": "vite",
     "start": "node server.js"
   },
   "repository": {
