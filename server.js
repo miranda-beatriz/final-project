@@ -1,127 +1,90 @@
 const express = require('express');
-const axios = require('axios');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 const getRecipes = require('./fetchRecipes.js');
+
 const app = express();
 const PORT = 5173;
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
-const favoritesFile = path.join(__dirname, 'favorites.json');
-const BASE_URL = "https://api.edamam.com/api/meal-planner/v1";
-require('dotenv').config();
 
+const favoritesFile = path.join(__dirname, 'favorites.json');
+const BASE_URL = "https://api.edamam.com/api/recipes/v2";
 const API_ID = process.env.API_ID;
 const API_KEY = process.env.API_KEY;
-console.log("User ID:", process.env.EDAMAM_ACCOUNT_USER);
+const USER_ID = process.env.USER_ID;
 
-const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-        'EDAMAM_ACCOUNT_USER': process.env.EDAMAM_ACCOUNT_USER
-    }
-});
+console.log("User ID:", USER_ID);
 
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
-}));
+if (!API_ID || !API_KEY || !USER_ID) {
+    console.error("Erro: Certifique-se de que API_ID, API_KEY e USER_ID estão definidos no .env");
+    process.exit(1);
+}
 
-app.post('/search', async (req, res) => {
-    try {
-        const { query } = req.body; 
-
-        const response = await axios.post(`${BASE_URL}/${API_ID}/select?type=public`, {}, {
-            headers: {
-                'accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Edamam-Account-User': process.env.EDAMAM_ACCOUNT_USER
-            }
-        });
-
-        res.json(response.data);
-    } catch (error) {
-        console.error("Error fetching recipes:", error.response?.data || error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'home-page', 'index.html'));
-});
-
-
+// 🔥 Buscar receitas com a API usando fetch
 app.get('/search', async (req, res) => {
     try {
         const { query } = req.query;
-        const response = await axios.get(`${BASE_URL}`, {
-            params: {
-                type: "public",
-                q: query,
-                app_id: API_ID,
-                app_key: API_KEY
-            },
+        const url = `${BASE_URL}?type=public&q=${query}&app_id=${API_ID}&app_key=${API_KEY}`;
+        const response = await fetch(url, {
             headers: {
-                'Edamam-Account-User': 'biamiranda'
+                'Edamam-Account-User': USER_ID
             }
         });
-        res.json(response.data);
+
+        const data = await response.json();
+        res.json(data);
     } catch (error) {
         console.error("Error fetching recipes:", error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Error fetching recipes' });
     }
 });
-
 app.get('/random', async (req, res) => {
     try {
-        const response = await axios.get(`${BASE_URL}`, {
-            params: {
-                type: "public",
-                q: "chicken",
-                app_id: API_ID,
-                app_key: API_KEY
-            }
+        console.log("Fetching random recipe...");
+        const url = `${BASE_URL}?type=public&q=chicken&app_id=${API_ID}&app_key=${API_KEY}`;
+        const response = await fetch(url, {
+            headers: { 'Edamam-Account-User': USER_ID }
         });
 
-        const recipes = response.data.hits;
-        if (recipes.length === 0) {
-            return res.json({ message: "No recipes found" });
+        if (!response.ok) {
+            console.error(`Erro na API: ${response.status} - ${response.statusText}`);
+            return res.status(response.status).json({ error: `API error: ${response.statusText}` });
         }
 
-        const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+        const data = await response.json();
+
+        if (!data.hits || data.hits.length === 0) {
+            return res.json({ error: "No recipes found" });
+        }
+
+        const randomRecipe = data.hits[Math.floor(Math.random() * data.hits.length)];
         res.json(randomRecipe);
     } catch (error) {
         console.error("Error fetching random recipe:", error);
-        res.status(500).json({ error: 'Error fetching random recipe' });
+        res.status(500).json({ error: 'Internal server error while fetching random recipe' });
     }
 });
 
 
-// Function to read favorites
+// 🔥 Favoritos
 const readFavorites = () => {
     if (!fs.existsSync(favoritesFile)) return { wantToMake: [], alreadyMade: [] };
     return JSON.parse(fs.readFileSync(favoritesFile, 'utf8'));
 };
 
-// Function to save favorites
 const saveFavorites = (favorites) => {
     fs.writeFileSync(favoritesFile, JSON.stringify(favorites, null, 2));
 };
 
-// Route to get favorite recipes
 app.get('/favorites', (req, res) => {
     res.json(readFavorites());
 });
 
-// Route to add a recipe to favorites
 app.post('/favorites', (req, res) => {
-    const { recipe, category } = req.body; // category: 'wantToMake' or 'alreadyMade'
+    const { recipe, category } = req.body;
     if (!recipe || !category) {
         return res.status(400).json({ error: 'Recipe and category are required' });
     }
@@ -132,7 +95,6 @@ app.post('/favorites', (req, res) => {
     res.json({ message: 'Recipe saved successfully!' });
 });
 
-// Route to remove a recipe from favorites
 app.delete('/favorites', (req, res) => {
     const { recipeLabel, category } = req.body;
     if (!recipeLabel || !category) {
@@ -145,6 +107,9 @@ app.delete('/favorites', (req, res) => {
     res.json({ message: 'Recipe removed successfully!' });
 });
 
+app.use(express.static(path.join(__dirname, "public")));
+
+// 🔥 Inicia o servidor
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:5173`);
+    console.log(`Server running at http://localhost:${PORT}`);
 });

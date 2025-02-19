@@ -2,8 +2,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchButton = document.getElementById("search-button");
     const searchInput = document.getElementById("searchInput");
     const randomButton = document.getElementById("random-button");
+    const results = document.getElementById("recipe-results");
 
-    if (!searchButton || !searchInput || !randomButton) {
+    if (!searchButton || !searchInput || !randomButton || !results) {
         console.error("DOM elements not found!");
         return;
     }
@@ -16,30 +17,46 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         try {
-            const response = await fetch("http://localhost:5173/search", {
-                method: "POST", // Agora usando POST
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ query: query }) // Enviando o termo de busca
-            });
-
-            if (!response.ok) throw new Error("Error fetching recipes");
+            console.log("Searching for:", query);
+            const response = await fetch(`http://localhost:5173/search?q=${encodeURIComponent(query)}`);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Server error: ${response.status} - ${errorText}`);
+            }
 
             const data = await response.json();
+            console.log("Fetched recipes:", data);
             displayRecipes(data.hits);
         } catch (error) {
             console.error("Error fetching recipes:", error);
+            results.innerHTML = "<p>Error fetching recipes. Please try again later.</p>";
         }
     });
 
     randomButton.addEventListener("click", async function () {
         try {
+            console.log("Fetching random recipe...");
             const response = await fetch("http://localhost:5173/random");
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Server error: ${response.status} - ${errorText}`);
+            }
+
             const data = await response.json();
+            console.log("Random recipe fetched:", data);
+            
+            if (data.error) {
+                console.log("API returned an error:", data.error);
+                results.innerHTML = `<p>${data.error}</p>`;
+                return;
+            }
+
             displayRecipes([data]);
         } catch (error) {
             console.error("Error fetching random recipe:", error);
+            results.innerHTML = "<p>Error fetching random recipe. Please try again later.</p>";
         }
     });
 });
