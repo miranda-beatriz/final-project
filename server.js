@@ -18,11 +18,6 @@ const USER_ID = process.env.USER_ID;
 
 console.log("User ID:", USER_ID);
 
-if (!API_ID || !API_KEY || !USER_ID) {
-    console.error("Erro: Certifique-se de que API_ID, API_KEY e USER_ID estão definidos no .env");
-    process.exit(1);
-}
-
 // 🔥 Buscar receitas com a API usando fetch
 app.get('/search', async (req, res) => {
     try {
