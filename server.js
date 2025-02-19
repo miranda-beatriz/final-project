@@ -54,13 +54,12 @@ app.get('/random', async (req, res) => {
         }
 
         const data = await response.json();
-
         if (!data.hits || data.hits.length === 0) {
             return res.json({ error: "No recipes found" });
         }
-
-        const randomRecipe = data.hits[Math.floor(Math.random() * data.hits.length)];
-        res.json(randomRecipe);
+        const randomIndex = Math.floor(Math.random() * data.hits.length);
+        res.json(data.hits[randomIndex].recipe);
+        
     } catch (error) {
         console.error("Error fetching random recipe:", error);
         res.status(500).json({ error: 'Internal server error while fetching random recipe' });

@@ -85,10 +85,14 @@ async function addToFavorites(label, image, category) {
 
 
 // Remove a recipe from favorites
-function removeRecipe(label, category) {
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || { wantToMake: [], alreadyMade: [] };
+async function removeRecipe(label, category) {
+    const response = await fetch('/favorites', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipeLabel: label, category })
+    });
 
-    favorites[category] = favorites[category].filter(recipe => recipe.label !== label);
-    saveFavorites(favorites);
-    displayFavorites(category, favorites[category]);
+    const result = await response.json();
+    alert(result.message);
+    loadFavorites(); // Atualizar favoritos após remoção
 }
