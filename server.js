@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
@@ -17,6 +18,9 @@ const API_KEY = process.env.API_KEY;
 const USER_ID = process.env.USER_ID;
 
 console.log("User ID:", USER_ID);
+console.log("API_ID:", API_ID);
+console.log("API_KEY:", API_KEY);
+
 
 // 🔥 Buscar receitas com a API usando fetch
 app.get('/search', async (req, res) => {
