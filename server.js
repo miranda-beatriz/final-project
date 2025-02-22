@@ -11,10 +11,14 @@ app.use(express.static("public"));
 app.use(express.json());
 
 app.get("/api/recipes", async (req, res) => {
+    
+    console.log("Iniciou a busca das receitas !!!")
+    
     const { query } = req.query;
     if (!query) {
         return res.status(400).json({ error: "error" });
     }
+    console.log("Receita que será buscada: ", query)
 
     const appId = process.env.APP_ID;
     const appKey = process.env.APP_KEY;
