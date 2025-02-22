@@ -7,6 +7,9 @@ document.getElementById("recipe-form").addEventListener("submit", async function
 async function fetchRecipes(query) {
     try {
         const response = await fetch(`/api/recipes?query=${query}`);
+
+        console.log("Mostra o evento que está sendo chamado :", response);
+        
         if (!response.ok) throw new Error("Error when searching for recipes");
         
         const recipes = await response.json();
